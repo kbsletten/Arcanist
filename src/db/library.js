@@ -3,6 +3,13 @@ import sqlite3 from "sqlite3";
 
 const SCRIPTS = ["servers"];
 
+function mapServer(server) {
+  return {
+    ...server,
+    light: server.light ?? 0,
+  };
+}
+
 export class Library {
   constructor() {
     this.conn = new sqlite3.Database("arcanist.sqlite");
@@ -32,9 +39,9 @@ export class Library {
         serverId,
         JSON.stringify({})
       );
-      return {};
+      return mapServer({});
     }
-    return JSON.parse(server["Data"]);
+    return mapServer(JSON.parse(server["Data"]));
   }
   async updateServer(serverId, server) {
     await this.run(
