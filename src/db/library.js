@@ -32,7 +32,7 @@ export class Library {
         serverId,
         JSON.stringify({})
       );
-      server = { Data: {} };
+      return {};
     }
     return JSON.parse(server["Data"]);
   }
