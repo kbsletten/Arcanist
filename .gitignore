@@ -1,0 +1,4 @@
+node_modules
+dist
+secrets.js
+src/**/*.gen.cjs

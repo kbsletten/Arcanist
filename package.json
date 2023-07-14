@@ -1,0 +1,21 @@
+{
+  "name": "Arcanist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/bot.js",
+  "scripts": {
+    "codegen": "pegjs -o src/parsers/dicepool.gen.cjs src/parsers/dicepool.pegjs",
+    "start": "nodemon ./src/bot.js"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.22",
+    "pegjs": "^0.10.0"
+  },
+  "dependencies": {
+    "discord.js": "^14.11.0"
+  }
+}
