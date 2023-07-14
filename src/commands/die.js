@@ -19,18 +19,14 @@ export class Die {
           Math.floor(Math.random() * sides) + 1,
         ]
       : [Math.floor(Math.random() * sides) + 1];
-    const roll = multiple
-      ? rolls.reduce((l, r) => l + r)
-      : advantage
-      ? Math.max(...rolls)
-      : Math.min(...rolls);
     if (multiple) {
       return {
-        roll,
+        roll: rolls.reduce((l, r) => l + r),
         multiple: true,
         display: rolls.join(" + "),
       };
     }
+    const roll = advantage ? Math.max(...rolls) : Math.min(...rolls);
     const rollIndex = rolls.indexOf(roll);
     return {
       roll,
