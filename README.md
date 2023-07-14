@@ -1,4 +1,4 @@
-# Arcanist
+# Arcanist [![Node.js CI](https://github.com/kbsletten/Arcanist/actions/workflows/node.js.yml/badge.svg)](https://github.com/kbsletten/Arcanist/actions/workflows/node.js.yml)
 
 A Discord bot for the [Shadowdark RPG](https://www.thearcanelibrary.com/pages/shadowdark).
 
