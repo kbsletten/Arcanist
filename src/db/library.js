@@ -11,8 +11,8 @@ function mapServer(server) {
 }
 
 export class Library {
-  constructor() {
-    this.conn = new sqlite3.Database("arcanist.sqlite");
+  constructor(file = "arcanist.sqlite") {
+    this.conn = new sqlite3.Database(file);
   }
   async init() {
     for (const script of SCRIPTS) {

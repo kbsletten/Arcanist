@@ -3,3 +3,4 @@ dist
 secrets.js
 src/**/*.gen.cjs
 *.sqlite
+coverage
