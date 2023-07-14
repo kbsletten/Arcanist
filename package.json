@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/bot.js",
   "scripts": {
-    "codegen": "pegjs -o src/parsers/dicepool.gen.cjs src/parsers/dicepool.pegjs",
+    "build": "pegjs -o src/parsers/dicepool.gen.cjs src/parsers/dicepool.pegjs",
     "start": "nodemon ./src/bot.js",
     "test": "jest"
   },
