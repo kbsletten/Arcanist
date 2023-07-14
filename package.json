@@ -6,7 +6,7 @@
   "scripts": {
     "codegen": "pegjs -o src/parsers/dicepool.gen.cjs src/parsers/dicepool.pegjs",
     "start": "nodemon ./src/bot.js",
-    "test": "jest --coverage"
+    "test": "jest"
   },
   "type": "module",
   "keywords": [],

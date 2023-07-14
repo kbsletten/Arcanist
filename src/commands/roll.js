@@ -30,10 +30,12 @@ export class Roll {
     for (const expr of pool) {
       if (!expr.first) {
         result += expr.neg ? " - " : " + ";
+      } else if (expr.neg) {
+        result += "-";
       }
       if (expr.value) {
         result += expr.value;
-        total += expr.value;
+        total += (expr.neg ? -1 : 1) * expr.value;
         continue;
       }
       let desc = `${expr.num}d${expr.sides}`;

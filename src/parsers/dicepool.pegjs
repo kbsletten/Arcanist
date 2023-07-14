@@ -1,5 +1,5 @@
 DicePool
-	=	d0:DiceExpr ds:( WS? ('+'/'-') WS? DiceExpr)* { return [{ first: true, ...d0 }, ...ds.map(function (d) { return d[1] == "-" ? { neg: true, ...d[3] } : d[3] })]; }
+	=	sign:('+'/'-')? WS? d0:DiceExpr ds:( WS? ('+'/'-') WS? DiceExpr)* { return [{ first: true, neg: sign == '-', ...d0 }, ...ds.map(function (d) { return d[1] == "-" ? { neg: true, ...d[3] } : d[3] })]; }
     ;
 
 DiceExpr
