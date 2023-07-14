@@ -44,7 +44,7 @@ Time remaining: 46m`);
       await light.execute({ serverId, minutes: 2, rounds: 2, reset: true })
     ).toEqual(`<filled> Reset light to 1h.
 <elapsed> 2 rounds (12 minutes)
-<elapsed> 2 minutes    
+<elapsed> 2 minutes
 Time remaining: 46m`);
   });
 });
