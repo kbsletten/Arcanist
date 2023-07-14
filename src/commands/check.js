@@ -6,7 +6,6 @@ export class Check {
 
   arguments = [
     {
-      default: 0,
       description: "The modifier to add to the roll",
       title: "modifier",
       type: "integer",
@@ -30,19 +29,16 @@ export class Check {
       type: "string",
     },
     {
-      default: false,
       description: "Whether or not the check has advantage",
       title: "advantage",
       type: "boolean",
     },
     {
-      default: false,
       description: "Whether or not the check has disadvantage",
       title: "disadvantage",
       type: "boolean",
     },
     {
-      default: 1,
       description: "The number of times to roll the check",
       minimum: 1,
       title: "multiple",
@@ -52,7 +48,15 @@ export class Check {
 
   description = "Roll a check and return the result.";
 
-  execute({ advantage, dc, disadvantage, modifier, multiple, name, stat }) {
+  execute({
+    advantage,
+    dc,
+    disadvantage,
+    modifier = 0,
+    multiple = 1,
+    name,
+    stat,
+  }) {
     const lines = [];
     let difficulty = "";
     if (dc !== undefined) {

@@ -84,7 +84,7 @@ export async function startup() {
         argument.title,
         argument.required
       )?.value;
-      parameters[argument.title] = value ?? argument.default;
+      parameters[argument.title] = value;
     }
     interaction.reply(await command.execute(parameters));
   });
