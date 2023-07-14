@@ -2,7 +2,7 @@ import { Library } from "../db/library";
 import { Light } from "./light";
 
 describe("light", () => {
-  const library = new Library("arcanist.test.sqlite");
+  const library = new Library(":memory:");
   const light = new Light(
     { filled: "<filled>", elapsed: "<elapsed>" },
     library
