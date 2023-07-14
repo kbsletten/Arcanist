@@ -8,6 +8,8 @@ import { Check } from "./commands/check.js";
 import { Roll } from "./commands/roll.js";
 import { Die } from "./commands/die.js";
 import { RollStats } from "./commands/rollstats.js";
+import { Light } from "./commands/light.js";
+import { Library } from "./db/library.js";
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds] });
 
@@ -22,17 +24,24 @@ const DiscordMarkdown = {
     return `~~${text}~~`;
   },
   headBandage: `:head_bandage:`,
+  filled: `:hourglass_flowing_sand:`,
+  elapsed: `:hourglass:`
 };
 
+const library = new Library();
 const die = new Die(DiscordMarkdown);
 const check = new Check(DiscordMarkdown, die);
 const roll = new Roll(DiscordMarkdown, die);
 const rollstats = new RollStats(DiscordMarkdown, die);
+const light = new Light(DiscordMarkdown, library);
+
+library.init().catch(console.error);
 
 const commands = {
   check,
   roll,
   rollstats,
+  light,
 };
 
 function jsonSchemaToDiscord(schema) {
@@ -66,7 +75,10 @@ export async function startup() {
     if (!command) {
       return;
     }
-    const parameters = { name: interaction.user.username };
+    const parameters = {
+      name: interaction.user.username,
+      serverId: interaction.guildId,
+    };
     for (const argument of command.arguments) {
       const value = interaction.options.get(
         argument.title,
@@ -74,7 +86,7 @@ export async function startup() {
       )?.value;
       parameters[argument.title] = value ?? argument.default;
     }
-    interaction.reply(command.execute(parameters));
+    interaction.reply(await command.execute(parameters));
   });
 
   const commandsJson = Object.entries(commands).map(([name, command]) => ({

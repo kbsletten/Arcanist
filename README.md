@@ -26,6 +26,16 @@ __Options__
 
 `stat` - This option sets the stat associated with the check. The available options are: Strength, Dexterity, Constitution, Intelligence, Wisdom, and Charisma.
 
+#### Light
+
+Manage the light counter.
+
+`reset` - This option resets the timer to 1h. Useful for when the team lights a new torch or casts the light spell.
+
+`rounds` - This option counts down the timer by a number of rounds using the rule of 10 rounds per hour.
+
+`minutes` - This option counts down the timer by a number of minutes for fine-grained handling.
+
 #### Roll
 
 Roll dice and return the result. The only option is dice which is expected to be of the form `Term ((+/-) Term)...`.
