@@ -1,7 +1,9 @@
 import { parse } from "../parsers/dicepool.gen.cjs";
+import { Command } from "./command.js";
 
-export class Roll {
+export class Roll extends Command {
   constructor(fmt, die) {
+    super();
     this.fmt = fmt;
     this.die = die;
   }

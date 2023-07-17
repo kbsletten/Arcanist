@@ -3,5 +3,6 @@
     "coveragePathIgnorePatterns": [
         "/node_modules/",
         "/src/parsers/"
-    ]
+    ],
+    "resetMocks": true
 }

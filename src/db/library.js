@@ -7,6 +7,7 @@ function mapServer(server) {
   return {
     ...server,
     light: server.light ?? 0,
+    lightStart: server.lightStart ?? undefined,
   };
 }
 

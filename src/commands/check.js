@@ -1,5 +1,8 @@
-export class Check {
+import { Command } from "./command.js";
+
+export class Check extends Command {
   constructor(fmt, die) {
+    super();
     this.fmt = fmt;
     this.die = die;
   }

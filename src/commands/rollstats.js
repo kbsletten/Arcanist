@@ -1,5 +1,8 @@
-export class RollStats {
+import { Command } from "./command.js";
+
+export class RollStats extends Command {
   constructor(fmt, die) {
+    super();
     this.fmt = fmt;
     this.die = die;
   }
