@@ -161,7 +161,6 @@ export class Light extends Command {
     const server = await this.library.getServer(serverId);
     this.burnDown({ server });
     delete server.lightStart;
-    server.lightStart = new Date().toISOString();
     this.cancelTimers({ serverId });
     await this.library.updateServer(serverId, server);
     return {
