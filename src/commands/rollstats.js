@@ -11,7 +11,7 @@ export class RollStats extends Command {
 
   description = "Roll stats in order and return the result.";
 
-  execute({}) {
+  async executeActions({}) {
     const stats = [
       "Strength",
       "Dexterity",
@@ -31,6 +31,14 @@ export class RollStats extends Command {
         stat,
       };
     });
-    return stats.map(({ display }) => display).join("\n");
+    return {
+      actions: [
+        {
+          id: `character-fromStats-${stats.map((it) => it.roll).join(":")}`,
+          title: "Create new character",
+        },
+      ],
+      message: stats.map(({ display }) => display).join("\n"),
+    };
   }
 }

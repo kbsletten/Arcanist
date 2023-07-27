@@ -12,6 +12,7 @@ import { Die } from "./commands/die.js";
 import { RollStats } from "./commands/rollstats.js";
 import { Light } from "./commands/light.js";
 import { Library } from "./db/library.js";
+import { Character } from "./commands/character.js";
 
 function mapOption(schema) {
   const TYPES = {
@@ -81,18 +82,20 @@ const DiscordEvents = {
 
 const library = new Library();
 const die = new Die(DiscordMarkdown);
-const check = new Check(DiscordMarkdown, die);
+const check = new Check(DiscordMarkdown, die, library);
 const roll = new Roll(DiscordMarkdown, die);
 const rollstats = new RollStats(DiscordMarkdown, die);
 const light = new Light(DiscordMarkdown, library, DiscordEvents);
+const character = new Character(DiscordMarkdown, library);
 
 library.init().catch(console.error);
 
 const commands = {
+  character,
   check,
+  light,
   roll,
   rollstats,
-  light,
 };
 
 export async function startup() {
@@ -109,10 +112,11 @@ export async function startup() {
       return;
     }
     const parameters = {
-      id,
-      name: interaction.user.username,
-      serverId: interaction.guildId,
       conversationId: interaction.channelId,
+      id,
+      serverId: interaction.guildId,
+      userId: interaction.user?.id,
+      username: interaction.user.username,
     };
     const { actions, message } = await command[method]?.(parameters);
     const components = mapActions(actions);
@@ -130,9 +134,10 @@ export async function startup() {
       return;
     }
     const parameters = {
-      name: interaction.user.username,
-      serverId: interaction.guildId,
       conversationId: interaction.channelId,
+      serverId: interaction.guildId,
+      userId: interaction.user?.id,
+      username: interaction.user.username,
     };
     for (const argument of command.arguments) {
       const value = interaction.options.get(

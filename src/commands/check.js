@@ -1,10 +1,12 @@
 import { Command } from "./command.js";
+import { statModifier } from "./util.js";
 
 export class Check extends Command {
-  constructor(fmt, die) {
+  constructor(fmt, die, libarary) {
     super();
     this.fmt = fmt;
     this.die = die;
+    this.library = libarary;
   }
 
   arguments = [
@@ -51,15 +53,18 @@ export class Check extends Command {
 
   description = "Roll a check and return the result.";
 
-  execute({
+  async execute({
     advantage,
     dc,
     disadvantage,
     modifier = 0,
     multiple = 1,
-    name,
+    username,
     stat,
+    userId,
   }) {
+    const user = await this.library.getUser(userId);
+    let [, character] = await this.library.getDefaultCharacter(userId, user);
     const lines = [];
     let difficulty = "";
     if (dc !== undefined) {
@@ -68,6 +73,9 @@ export class Check extends Command {
     let check = "check";
     if (stat !== undefined) {
       check = `${stat} check`;
+      if (character && !modifier) {
+        modifier = statModifier(character[stat.toLowerCase()]);
+      }
     }
     let successes = 0;
     for (let i = 0; i < multiple; i++) {
@@ -91,7 +99,7 @@ export class Check extends Command {
     if (dc !== undefined && multiple > 1) {
       lines.push(`Successes: ${successes}/${multiple}`);
     }
-    return `${name} attempts a ${difficulty}${check}!
+    return `${character?.name ?? username} attempts a ${difficulty}${check}!
 ${lines.join("\n")}`;
   }
 }
