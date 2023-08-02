@@ -10,6 +10,16 @@ To add Arcanist to your discord server, [click here](https://discord.com/api/oau
 
 All commands use the Discord `/command` syntax. Additional parameters can be passed by tabbing through the different inputs.
 
+#### Character
+
+View or modify your character.
+
+__Options__
+
+`name` - This option sets your active character's name.
+
+`strength`/`dexterity`/`constitution`/`intelligence`/`wisdom`/`charisma` - These options set your character's stats. Valid range is 3-18.
+
 #### Check
 
 Roll a check and return the result.
