@@ -1,6 +1,7 @@
 import fs from "fs";
 import sqlite3 from "sqlite3";
 import { v4 as uuid } from "uuid";
+import { statModifier } from "../util.js";
 
 const SCRIPTS = ["characters", "users", "servers"];
 
@@ -20,15 +21,46 @@ function mapUser(user) {
 }
 
 function mapCharacter(character) {
+  const {
+    name = "Unnamed character",
+    ancestry = "Mysterious",
+    className = "Classless",
+    level = 0,
+    xp = 0,
+    title = "Unknown",
+    alignment = "N",
+    background = "Stranger",
+    deity = "Godless",
+    strength = 10,
+    dexterity = 10,
+    constitution = 10,
+    intelligence = 10,
+    wisdom = 10,
+    charisma = 10,
+    maxHp = Math.max(1, statModifier(constitution)),
+    hp = maxHp,
+    ac = 10 + statModifier(dexterity),
+  } = character;
   return {
     ...character,
-    name: character.name ?? "Unnamed character",
-    strength: character.strength ?? 10,
-    dexterity: character.dexterity ?? 10,
-    constitution: character.constitution ?? 10,
-    intelligence: character.intelligence ?? 10,
-    wisdom: character.wisdom ?? 10,
-    charisma: character.charisma ?? 10,
+    name,
+    ancestry,
+    className,
+    level,
+    xp,
+    title,
+    alignment,
+    background,
+    deity,
+    strength,
+    dexterity,
+    constitution,
+    intelligence,
+    wisdom,
+    charisma,
+    maxHp,
+    hp,
+    ac,
   };
 }
 

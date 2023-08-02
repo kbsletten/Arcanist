@@ -32,13 +32,21 @@ describe("character", () => {
 
   it("lets you see your character's stats", async () => {
     expect(await character.execute({ userId })).toEqual(`*Unnamed character*
+*LV* 0 Unknown Classless *XP* 0/0
+*Ancestry* Mysterious *Background* Stranger
+*Alignment* N (Godless)
+*HP* 1/1 *AC* 10
 *STR* 8/-1 *DEX* 10/+0 *CON* 12/+1
 *INT* 13/+1 *WIS* 14/+2 *CHA* 15/+2`);
   });
 
   it("lets you change your character's name", async () => {
-    expect(await character.execute({ userId, name: "Test Character" }))
-      .toEqual(`*Test Character*
+    expect(await character.execute({ userId, name: "Morgan" }))
+      .toEqual(`*Morgan*
+*LV* 0 Unknown Classless *XP* 0/0
+*Ancestry* Mysterious *Background* Stranger
+*Alignment* N (Godless)
+*HP* 1/1 *AC* 10
 *STR* 8/-1 *DEX* 10/+0 *CON* 12/+1
 *INT* 13/+1 *WIS* 14/+2 *CHA* 15/+2`);
   });
@@ -54,7 +62,36 @@ describe("character", () => {
         wisdom: 10,
         charisma: 12,
       })
-    ).toEqual(`*Test Character*
+    ).toEqual(`*Morgan*
+*LV* 0 Unknown Classless *XP* 0/0
+*Ancestry* Mysterious *Background* Stranger
+*Alignment* N (Godless)
+*HP* 1/1 *AC* 10
+*STR* 13/+1 *DEX* 14/+2 *CON* 15/+2
+*INT* 8/-1 *WIS* 10/+0 *CHA* 12/+1`);
+  });
+
+  it("lets you change your character's details", async () => {
+    expect(
+      await character.execute({
+        userId,
+        level: 3,
+        xp: 9,
+        hp: 22,
+        ac: 15,
+        maxhp: 12,
+        ancestry: "Human",
+        class: "Fighter",
+        alignment: "L",
+        deity: "Saint Terragnis",
+        title: "Cavalier",
+        background: "Guard",
+      })
+    ).toEqual(`*Morgan*
+*LV* 3 Cavalier Fighter *XP* 9/30
+*Ancestry* Human *Background* Guard
+*Alignment* L (Saint Terragnis)
+*HP* 12/12 *AC* 15
 *STR* 13/+1 *DEX* 14/+2 *CON* 15/+2
 *INT* 8/-1 *WIS* 10/+0 *CHA* 12/+1`);
   });

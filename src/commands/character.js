@@ -1,5 +1,5 @@
 import { Command } from "./command.js";
-import { statModifier } from "./util.js";
+import { statModifier } from "../util.js";
 
 function mod(stat) {
   const modifier = statModifier(stat);
@@ -18,6 +18,68 @@ export class Character extends Command {
       description: "Your character's name",
       title: "name",
       type: "string",
+    },
+    {
+      description: "Your character's ancestry",
+      title: "ancestry",
+      type: "string",
+    },
+    {
+      description: "Your character's background",
+      title: "background",
+      type: "string",
+    },
+    {
+      description: "Your character's class",
+      title: "class",
+      type: "string",
+    },
+    {
+      description: "Your character's title",
+      title: "title",
+      type: "string",
+    },
+    {
+      description: "Your character's alignment",
+      title: "alignment",
+      type: "string",
+      enum: ["C", "N", "L"],
+    },
+    {
+      description: "Your character's deity",
+      title: "deity",
+      type: "string",
+    },
+    {
+      description: "Your character's maximum Hit Points",
+      title: "maxhp",
+      type: "number",
+      minimum: 1,
+    },
+    {
+      description: "Your character's current Hit Points",
+      title: "hp",
+      type: "number",
+      minimum: 0,
+    },
+    {
+      description: "Your character's Armor Class",
+      title: "ac",
+      type: "number"
+    },
+    {
+      description: "Your character's level",
+      title: "level",
+      type: "number",
+      minimum: 0,
+      maximum: 10,
+    },
+    {
+      description: "Your character's xp",
+      title: "xp",
+      type: "number",
+      minimum: 0,
+      maximum: 100,
     },
     {
       description: "Your character's Strength score",
@@ -87,14 +149,25 @@ export class Character extends Command {
   }
 
   async executeActions({
-    userId,
-    name,
-    strength,
-    dexterity,
-    constitution,
-    intelligence,
-    wisdom,
+    ac,
+    alignment,
+    ancestry,
+    background,
     charisma,
+    class: className,
+    constitution,
+    deity,
+    dexterity,
+    hp,
+    intelligence,
+    maxhp: maxHp,
+    name,
+    level,
+    strength,
+    title,
+    userId,
+    wisdom,
+    xp,
   }) {
     const user = await this.library.getUser(userId);
     let [characterId, character] = await this.library.getDefaultCharacter(
@@ -108,22 +181,46 @@ export class Character extends Command {
       };
     }
     for (const [field, value] of Object.entries({
+      ac,
+      alignment,
+      ancestry,
+      background,
+      charisma,
+      className,
+      constitution,
+      deity,
+      dexterity,
+      hp,
+      intelligence,
+      level,
+      maxHp,
       name,
       strength,
-      dexterity,
-      constitution,
-      intelligence,
+      title,
       wisdom,
-      charisma,
+      xp
     })) {
       if (value !== undefined) {
         character[field] = value;
       }
     }
+    if (character.hp > character.maxHp) {
+      character.hp = character.maxHp;
+    }
     await this.library.updateCharacter(characterId, character);
     return {
       actions: [],
       message: `${this.fmt.bold(character.name)}
+${this.fmt.bold("LV")} ${character.level} ${character.title} ${
+        character.className
+      } ${this.fmt.bold("XP")} ${character.xp}/${character.level * 10}
+${this.fmt.bold("Ancestry")} ${character.ancestry} ${this.fmt.bold(
+        "Background"
+      )} ${character.background}
+${this.fmt.bold("Alignment")} ${character.alignment} (${character.deity})
+${this.fmt.bold("HP")} ${character.hp}/${character.maxHp} ${this.fmt.bold(
+        "AC"
+      )} ${character.ac}
 ${this.fmt.bold("STR")} ${mod(character.strength)} ${this.fmt.bold(
         "DEX"
       )} ${mod(character.dexterity)} ${this.fmt.bold("CON")} ${mod(

@@ -16,7 +16,29 @@ View or modify your character.
 
 __Options__
 
+`ancestry` - This option sets your active character's ancestry.
+
+`alignment` - This option sets your active character's alignment. Options are C (Chaotic), N (Neutral), and L (Lawful).
+
+`ac` - This option sets your active character's Armor Class (AC).
+
+`background` - This option sets your active character's background.
+
+`class` - This option sets your active character's class.
+
+`deity` - This option sets your active character's deity.
+
+`hp` - This option sets your active character's current Hit Points (HP). The minimum is 0, and any amount over the maximum will be lost.
+
+`level` - This option sets your active character's level. The minimum is 0 and the maximum is 10.
+
+`maxhp` - This option sets your active character's maximum Hit Points (HP). The minimum is 1.
+
 `name` - This option sets your active character's name.
+
+`title` - This option sets your active character's title.
+
+`xp` - This option sets your active character's current XP. The minimum is 0.
 
 `strength`/`dexterity`/`constitution`/`intelligence`/`wisdom`/`charisma` - These options set your character's stats. Valid range is 3-18.
 

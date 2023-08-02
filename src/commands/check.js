@@ -1,5 +1,5 @@
 import { Command } from "./command.js";
-import { statModifier } from "./util.js";
+import { statModifier } from "../util.js";
 
 export class Check extends Command {
   constructor(fmt, die, libarary) {
