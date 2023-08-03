@@ -123,6 +123,11 @@ export class Character extends Command {
       minimum: 3,
       maximum: 18,
     },
+    {
+      description: "Whether or not your character has a luck token",
+      title: "luck",
+      type: "boolean"
+    }
   ];
 
   description = "View or modify your character.";
@@ -163,6 +168,7 @@ export class Character extends Command {
     maxhp: maxHp,
     name,
     level,
+    luck,
     strength,
     title,
     userId,
@@ -193,6 +199,7 @@ export class Character extends Command {
       hp,
       intelligence,
       level,
+      luck,
       maxHp,
       name,
       strength,
@@ -210,7 +217,7 @@ export class Character extends Command {
     await this.library.updateCharacter(characterId, character);
     return {
       actions: [],
-      message: `${this.fmt.bold(character.name)}
+      message: `${this.fmt.bold(character.name)}${character.luck ? ` ${this.fmt.luck}` : ""}
 ${this.fmt.bold("LV")} ${character.level} ${character.title} ${
         character.className
       } ${this.fmt.bold("XP")} ${character.xp}/${character.level * 10}

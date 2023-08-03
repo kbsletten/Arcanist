@@ -52,20 +52,15 @@ function mapActions(actions) {
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds] });
 
 const DiscordMarkdown = {
-  bold: function (text) {
-    return `**${text}**`;
-  },
-  italics: function (text) {
-    return `_${text}_`;
-  },
-  strike: function (text) {
-    return `~~${text}~~`;
-  },
-  headBandage: `:head_bandage:`,
-  light: `:candle:`,
-  filled: `:hourglass_flowing_sand:`,
-  elapsed: `:hourglass:`,
+  bold: (text) => `**${text}**`,
   darkness: `:wind_blowing_face:`,
+  elapsed: `:hourglass:`,
+  filled: `:hourglass_flowing_sand:`,
+  headBandage: `:head_bandage:`,
+  italics: (text) => `_${text}_`,
+  light: `:candle:`,
+  luck: `:sparkles:`,
+  strike: (text) => `~~${text}~~`,
 };
 
 const DiscordEvents = {

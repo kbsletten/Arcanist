@@ -40,6 +40,7 @@ function mapCharacter(character) {
     maxHp = Math.max(1, statModifier(constitution)),
     hp = maxHp,
     ac = 10 + statModifier(dexterity),
+    luck = false,
   } = character;
   return {
     ...character,
@@ -61,6 +62,7 @@ function mapCharacter(character) {
     maxHp,
     hp,
     ac,
+    luck,
   };
 }
 

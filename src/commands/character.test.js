@@ -6,6 +6,7 @@ describe("character", () => {
   const character = new Character(
     {
       bold: (t) => `*${t}*`,
+      luck: `:luck:`,
     },
     library
   );
@@ -88,6 +89,21 @@ describe("character", () => {
         background: "Guard",
       })
     ).toEqual(`*Morgan*
+*LV* 3 Cavalier Fighter *XP* 9/30
+*Ancestry* Human *Background* Guard
+*Alignment* L (Saint Terragnis)
+*HP* 12/12 *AC* 15
+*STR* 13/+1 *DEX* 14/+2 *CON* 15/+2
+*INT* 8/-1 *WIS* 10/+0 *CHA* 12/+1`);
+  });
+
+  it("lets you add a luck token", async () => {
+    expect(
+      await character.execute({
+        userId,
+        luck: true,
+      })
+    ).toEqual(`*Morgan* :luck:
 *LV* 3 Cavalier Fighter *XP* 9/30
 *Ancestry* Human *Background* Guard
 *Alignment* L (Saint Terragnis)

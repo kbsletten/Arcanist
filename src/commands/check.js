@@ -53,7 +53,37 @@ export class Check extends Command {
 
   description = "Roll a check and return the result.";
 
-  async execute({
+  async reroll({ id: parameters, userId, ...rest }) {
+    const user = await this.library.getUser(userId);
+    let [characterId, character] = await this.library.getDefaultCharacter(
+      userId,
+      user
+    );
+    if (character) {
+      character.luck = false;
+      await this.library.updateCharacter(characterId, character);
+    }
+    const {
+      a: advantage,
+      d: dc,
+      e: disadvantage,
+      m: modifier,
+      n: multiple,
+      s: stat,
+    } = Object.fromEntries(parameters.split(";").map((p) => p.split(":", 2)));
+    return await this.executeActions({
+      ...rest,
+      advantage: !advantage ? undefined : advantage === "true",
+      dc: !dc ? undefined : parseInt(dc, 10),
+      disadvantage: !disadvantage ? undefined : disadvantage === "true",
+      modifier: !modifier ? undefined : parseInt(modifier, 10),
+      multiple: !multiple ? undefined : parseInt(multiple, 10),
+      stat,
+      userId,
+    });
+  }
+
+  async executeActions({
     advantage,
     dc,
     disadvantage,
@@ -99,7 +129,29 @@ export class Check extends Command {
     if (dc !== undefined && multiple > 1) {
       lines.push(`Successes: ${successes}/${multiple}`);
     }
-    return `${character?.name ?? username} attempts a ${difficulty}${check}!
+    const actions = [];
+    if (character?.luck) {
+      const props = {
+        a: advantage,
+        d: dc,
+        e: disadvantage,
+        m: modifier,
+        n: multiple,
+        s: stat,
+      };
+      const id = Object.entries(props)
+        .filter(([, v]) => v !== undefined)
+        .map(([k, v]) => `${k}:${v}`)
+        .join(";");
+      actions.push({
+        id: `check-reroll-${id}`,
+        title: `Reroll`,
+      });
+    }
+    const message = `${
+      character?.name ?? username
+    } attempts a ${difficulty}${check}!
 ${lines.join("\n")}`;
+    return { actions, message };
   }
 }

@@ -32,6 +32,8 @@ __Options__
 
 `level` - This option sets your active character's level. The minimum is 0 and the maximum is 10.
 
+`luck` - This option sets your active character's luck token.
+
 `maxhp` - This option sets your active character's maximum Hit Points (HP). The minimum is 1.
 
 `name` - This option sets your active character's name.
@@ -44,7 +46,7 @@ __Options__
 
 #### Check
 
-Roll a check and return the result.
+Roll a check and return the result. If your character has a luck token, you will be allowed to reroll.
 
 __Options__
 
