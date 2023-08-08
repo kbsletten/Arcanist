@@ -60,6 +60,16 @@ __Options__
 
 `stat` - This option sets the stat associated with the check. The available options are: Strength, Dexterity, Constitution, Intelligence, Wisdom, and Charisma.
 
+#### Gear
+
+Manage your character's gear.
+
+__Options__
+
+`add` - Add an item to your character's gear. Use `quantity` and `slots` to specify the quantity or number of slots for the item.
+
+`edit` - Edit an item in your character's gear. Use `name`, `quantity` and `slots` to specify the changes you wish to make.
+
 #### Light
 
 Manage the light counter.
