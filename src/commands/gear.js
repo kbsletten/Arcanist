@@ -1,3 +1,4 @@
+import { statModifier } from "../util";
 import { Command } from "./command";
 
 const STARTING_GEAR = [
@@ -112,11 +113,31 @@ export class Gear extends Command {
     return { actions: [], message: lines.join("\n") };
   }
 
-  displayGear(character, lines) {
+  displayGear(character, lines, actions = []) {
+    const hasShield = character.gear.some((it) => it.name === "Shield");
+    const armors = {
+      "Leather armor": 11 + statModifier(character.dexterity),
+      Chainmail: 13 + statModifier(character.dexterity),
+      "Plate mail": 15,
+    };
     for (const item of character.gear) {
       const quantity = item.quantity > 1 ? ` x${item.quantity}` : "";
       const slots = item.slots > 1 ? ` (${item.slots})` : "";
       lines.push(` - ${item.name}${quantity}${slots}`);
+      if (armors[item.name]) {
+        if (character.ac !== armors[item.name]) {
+          actions.push({
+            id: `character-update-ac:${armors[item.name]}`,
+            title: `Equip ${item.name}`,
+          });
+        }
+        if (hasShield && character.ac !== armors[item.name] + 2) {
+          actions.push({
+            id: `character-update-ac:${armors[item.name] + 2}`,
+            title: `Equip ${item.name} + Shield`,
+          });
+        }
+      }
     }
   }
 
@@ -165,7 +186,7 @@ export class Gear extends Command {
     if (character.level === 1 && !character.gear.length) {
       actions.push({ id: "gear-crawling", title: `Add crawling kit` });
     }
-    this.displayGear(character, lines);
+    this.displayGear(character, lines, actions);
     lines.push(`Slots: ${used}/${load}`);
     await this.library.updateCharacter(characterId, character);
     return { actions, message: lines.join("\n") };

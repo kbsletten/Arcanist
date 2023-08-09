@@ -10,8 +10,7 @@ describe("gear", () => {
   const mathRandom = jest.spyOn(Math, "random");
   const die = new Die(fmt);
   const gear = new Gear(fmt, library, die);
-  const userId = Math.random().toString().substring(2);
-  const secondUserId = Math.random().toString().substring(2);
+  let userId = Math.random().toString().substring(2);
 
   beforeAll(async () => {
     await library.init();
@@ -143,9 +142,10 @@ Slots: 7/10`
   });
 
   it(`suggests adding a crawling kit for level 1 characters`, async () => {
-    await character.fromStats({ id: "8:10:12:13:14:15", userId: secondUserId });
-    await character.execute({ level: 1, userId: secondUserId });
-    expect(await gear.executeActions({ userId: secondUserId })).toEqual({
+    userId = Math.random().toString().substring(2);
+    await character.fromStats({ id: "8:10:12:13:14:15", userId });
+    await character.execute({ level: 1, userId });
+    expect(await gear.executeActions({ userId })).toEqual({
       actions: [{ id: "gear-crawling", title: "Add crawling kit" }],
       message: `*Unnamed character's gear*
 Slots: 0/10`,
@@ -153,7 +153,7 @@ Slots: 0/10`,
   });
 
   it(`adds crawling kit`, async () => {
-    expect(await gear.crawling({ userId: secondUserId })).toEqual({
+    expect(await gear.crawling({ userId })).toEqual({
       actions: [],
       message: `*Adding crawling kit*
  - Flint and steel
@@ -163,6 +163,81 @@ Slots: 0/10`,
  - Iron spikes x10
  - Grappling hook
  - Rope, 60'`,
+    });
+  });
+
+  it(`prompts equipping armor and shield`, async () => {
+    userId = Math.random().toString().substring(2);
+    await character.fromStats({ id: "8:10:12:13:14:15", userId });
+    await gear.execute({ add: "Leather armor", userId });
+    await gear.execute({ add: "Chainmail", userId });
+    await gear.execute({ add: "Plate mail", userId });
+    expect(await gear.executeActions({ add: "Shield", userId })).toEqual({
+      actions: [
+        {
+          id: "character-update-ac:11",
+          title: "Equip Leather armor",
+        },
+        {
+          id: "character-update-ac:13",
+          title: "Equip Leather armor + Shield",
+        },
+        {
+          id: "character-update-ac:13",
+          title: "Equip Chainmail",
+        },
+        {
+          id: "character-update-ac:15",
+          title: "Equip Chainmail + Shield",
+        },
+        {
+          id: "character-update-ac:15",
+          title: "Equip Plate mail",
+        },
+        {
+          id: "character-update-ac:17",
+          title: "Equip Plate mail + Shield",
+        },
+      ],
+      message: `*Unnamed character's gear*
+ - Leather armor
+ - Chainmail
+ - Plate mail
+ - Shield
+Slots: 4/10`,
+    });
+  });
+
+  it(`allows equipping armor and shield`, async () => {
+    expect(await character.update({ id: "ac:15", userId })).toEqual({
+      actions: [],
+      message: `Updated Unnamed character's AC: 15`,
+    });
+    expect(await gear.executeActions({ userId })).toEqual({
+      actions: [
+        {
+          id: "character-update-ac:11",
+          title: "Equip Leather armor",
+        },
+        {
+          id: "character-update-ac:13",
+          title: "Equip Leather armor + Shield",
+        },
+        {
+          id: "character-update-ac:13",
+          title: "Equip Chainmail",
+        },
+        {
+          id: "character-update-ac:17",
+          title: "Equip Plate mail + Shield",
+        },
+      ],
+      message: `*Unnamed character's gear*
+ - Leather armor
+ - Chainmail
+ - Plate mail
+ - Shield
+Slots: 4/10`,
     });
   });
 });

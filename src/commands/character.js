@@ -6,6 +6,10 @@ function mod(stat) {
   return `${stat}/${modifier < 0 ? "" : "+"}${modifier}`;
 }
 
+function capitalize(prop) {
+  return prop.toUpperCase();
+}
+
 export class Character extends Command {
   constructor(fmt, library) {
     super();
@@ -65,7 +69,7 @@ export class Character extends Command {
     {
       description: "Your character's Armor Class",
       title: "ac",
-      type: "number"
+      type: "number",
     },
     {
       description: "Your character's level",
@@ -126,8 +130,8 @@ export class Character extends Command {
     {
       description: "Whether or not your character has a luck token",
       title: "luck",
-      type: "boolean"
-    }
+      type: "boolean",
+    },
   ];
 
   description = "View or modify your character.";
@@ -150,6 +154,30 @@ export class Character extends Command {
     return {
       actions: [],
       message: `Character created! Use /character to view or modify.`,
+    };
+  }
+
+  async update({ id: fields, userId }) {
+    const user = await this.library.getUser(userId);
+    let [characterId, character] = await this.library.getDefaultCharacter(
+      userId,
+      user
+    );
+    const updates = [];
+    for (const field of fields.split(";")) {
+      const [name, value] = field.split(":", 2);
+      updates.push(`${capitalize(name)}: ${value}`);
+      switch (typeof character[name]) {
+        case "number": {
+          character[name] = parseFloat(value);
+          break;
+        }
+      }
+    }
+    await this.library.updateCharacter(characterId, character);
+    return {
+      actions: [],
+      message: `Updated ${character.name}'s ${updates.join(", ")}`,
     };
   }
 
@@ -205,7 +233,7 @@ export class Character extends Command {
       strength,
       title,
       wisdom,
-      xp
+      xp,
     })) {
       if (value !== undefined) {
         character[field] = value;
@@ -217,7 +245,9 @@ export class Character extends Command {
     await this.library.updateCharacter(characterId, character);
     return {
       actions: [],
-      message: `${this.fmt.bold(character.name)}${character.luck ? ` ${this.fmt.luck}` : ""}
+      message: `${this.fmt.bold(character.name)}${
+        character.luck ? ` ${this.fmt.luck}` : ""
+      }
 ${this.fmt.bold("LV")} ${character.level} ${character.title} ${
         character.className
       } ${this.fmt.bold("XP")} ${character.xp}/${character.level * 10}
