@@ -2,80 +2,22 @@ import fs from "fs";
 import sqlite3 from "sqlite3";
 import { v4 as uuid } from "uuid";
 import { statModifier } from "../util.js";
+import { Server } from "../models/server.js";
+import { User } from "../models/user.js";
+import { Character } from "../models/character.js";
 
 const SCRIPTS = ["characters", "users", "servers"];
 
 function mapServer(server) {
-  return {
-    ...server,
-    light: server.light ?? 0,
-    lightStart: server.lightStart ?? undefined,
-  };
+  return new Server(server);
 }
 
 function mapUser(user) {
-  return {
-    ...user,
-    activeCharacterId: user.activeCharacterId ?? undefined,
-  };
+  return new User(user);
 }
 
 function mapCharacter(character) {
-  const {
-    alignment = "N",
-    ancestry = "Mysterious",
-    background = "Stranger",
-    charisma = 10,
-    className = "Classless",
-    constitution = 10,
-    deity = "Godless",
-    dexterity = 10,
-    gear = [],
-    intelligence = 10,
-    level = 0,
-    luck = false,
-    name = "Unnamed character",
-    strength = 10,
-    title = "Unknown",
-    wisdom = 10,
-    xp = 0,
-  } = character;
-  const {
-    ac = 10 + statModifier(dexterity),
-    maxHp = Math.max(1, statModifier(constitution)),
-  } = character;
-  const { hp = maxHp } = character;
-  return {
-    ...character,
-    ac,
-    alignment,
-    ancestry,
-    background,
-    charisma,
-    className,
-    constitution,
-    deity,
-    dexterity,
-    gear: gear.map((item) => {
-      const { name = "Unknown Item", slots = 1, quantity = 1 } = item;
-      return {
-        ...item,
-        name,
-        slots,
-        quantity,
-      };
-    }),
-    hp,
-    intelligence,
-    level,
-    luck,
-    maxHp,
-    name,
-    strength,
-    title,
-    wisdom,
-    xp,
-  };
+  return new Character(character);
 }
 
 export class Library {

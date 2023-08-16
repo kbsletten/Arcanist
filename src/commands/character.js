@@ -220,7 +220,7 @@ export class Character extends Command {
       ancestry,
       background,
       charisma,
-      className,
+      class: className,
       constitution,
       deity,
       dexterity,
@@ -249,7 +249,7 @@ export class Character extends Command {
         character.luck ? ` ${this.fmt.luck}` : ""
       }
 ${this.fmt.bold("LV")} ${character.level} ${character.title} ${
-        character.className
+        character.class
       } ${this.fmt.bold("XP")} ${character.xp}/${character.level * 10}
 ${this.fmt.bold("Ancestry")} ${character.ancestry} ${this.fmt.bold(
         "Background"

@@ -66,19 +66,11 @@ export class Gear extends Command {
 
   description = "Manage your character's gear.";
 
-  async starting({ userId }) {
-    const user = await this.library.getUser(userId);
-    let [characterId, character] = await this.library.getDefaultCharacter(
-      userId,
-      user
-    );
+  rollGear(character, lines) {
     const { display: quantityDisplay, roll: quantity } = this.die.execute({
       sides: 4,
     });
-    const lines = [
-      this.fmt.bold(`Rolling starting gear for ${character.name}`),
-      `${quantityDisplay} item(s)`,
-    ];
+    lines.push(`1d4 (${quantityDisplay}) = ${quantity} item(s)`);
     for (let i = 0; i < quantity; i++) {
       const { display: itemDisplay, roll: index } = this.die.execute({
         sides: STARTING_GEAR.length,
@@ -89,13 +81,31 @@ export class Gear extends Command {
         character.gear.push({ name, slots, quantity });
       }
       lines.push(
-        `${itemDisplay}; ${STARTING_GEAR[index - 1]
+        `1d${STARTING_GEAR.length} (${itemDisplay}) = ${index}; ${STARTING_GEAR[index - 1]
           .map((it) => it.name)
           .join(" and ")}`
       );
     }
+  }
+
+  async starting({ userId }) {
+    const user = await this.library.getUser(userId);
+    let [characterId, character] = await this.library.getDefaultCharacter(
+      userId,
+      user
+    );
+    const lines = [
+      this.fmt.bold(`Rolling starting gear for ${character.name}`),
+    ];
+    this.rollGear(character, lines);
     await this.library.updateCharacter(characterId, character);
     return { actions: [], message: lines.join("\n") };
+  }
+
+  addCrawling(character) {
+    for (const { name, slots = 1, quantity = 1 } of CRAWLING_KIT) {
+      character.gear.push({ name, slots, quantity });
+    }
   }
 
   async crawling({ userId }) {
@@ -104,9 +114,7 @@ export class Gear extends Command {
       userId,
       user
     );
-    for (const { name, slots = 1, quantity = 1 } of CRAWLING_KIT) {
-      character.gear.push({ name, slots, quantity });
-    }
+    this.addCrawling(character);
     await this.library.updateCharacter(characterId, character);
     const lines = [this.fmt.bold(`Adding crawling kit`)];
     this.displayGear(character, lines);

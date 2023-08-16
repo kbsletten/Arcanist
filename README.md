@@ -80,6 +80,12 @@ Manage the light counter.
 
 `minutes` - This option counts down the timer by a number of minutes for fine-grained handling.
 
+#### Randomcharacter
+
+Create a new character according to the quick rolling rules.
+
+`level` - This option picks between a 0th-level (classless) character and a 1st-level character. Defaults to 0.
+
 #### Roll
 
 Roll dice and return the result. The only option is dice which is expected to be of the form `Term ((+/-) Term)...`.

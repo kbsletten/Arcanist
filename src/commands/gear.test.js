@@ -2,18 +2,25 @@ import { Die } from "./die";
 import { Character } from "./character";
 import { Gear } from "./gear";
 import { Library } from "../db/library";
+import { MockRandom } from "../mocks/random";
 
 describe("gear", () => {
   const library = new Library(":memory:");
   const fmt = { bold: (t) => `*${t}*`, strike: (t) => `~${t}~` };
   const character = new Character(fmt, library);
-  const mathRandom = jest.spyOn(Math, "random");
-  const die = new Die(fmt);
+  const mockRandom = new MockRandom();
+  const die = new Die(fmt, mockRandom);
   const gear = new Gear(fmt, library, die);
   let userId = Math.random().toString().substring(2);
 
   beforeAll(async () => {
     await library.init();
+    await mockRandom.load();
+  });
+
+  afterAll(async () => {
+    await mockRandom.save();
+    await library.close();
   });
 
   it(`returns an error message when there's no active character`, async () => {
@@ -33,20 +40,14 @@ Slots: 0/10`,
   });
 
   it(`rolls for starting gear`, async () => {
-    mathRandom
-      .mockReturnValueOnce(0.9)
-      .mockReturnValueOnce(0.0)
-      .mockReturnValueOnce(0.3)
-      .mockReturnValueOnce(0.4)
-      .mockReturnValueOnce(0.65);
     expect(await gear.starting({ userId })).toEqual({
       actions: [],
       message: `*Rolling starting gear for Unnamed character*
-4 item(s)
-1; Torch
-4; Shortbow and Arrows
-5; Rope, 60'
-8; Iron spikes`,
+1d4 (4) = 4 item(s)
+1d12 (1) = 1; Torch
+1d12 (4) = 4; Shortbow and Arrows
+1d12 (5) = 5; Rope, 60'
+1d12 (8) = 8; Iron spikes`,
     });
   });
 

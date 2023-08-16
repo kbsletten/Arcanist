@@ -2,7 +2,8 @@
     "collectCoverage": true,
     "coveragePathIgnorePatterns": [
         "/node_modules/",
-        "/src/parsers/"
+        "/src/parsers/",
+        "/src/mocks/"
     ],
     "resetMocks": true
 }

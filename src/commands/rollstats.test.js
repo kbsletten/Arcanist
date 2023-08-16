@@ -1,13 +1,21 @@
 import { RollStats } from "./rollstats";
 import { Die } from "./die";
+import { MockRandom } from "../mocks/random";
 
 describe("rollStats", () => {
   const fmt = { bold: (t) => `*${t}*` };
-  const rollStats = new RollStats(fmt, new Die(fmt));
-  const mathRandom = jest.spyOn(Math, "random");
+  const mockRandom = new MockRandom();
+  const rollStats = new RollStats(fmt, new Die(fmt, mockRandom));
+
+  beforeAll(async () => {
+    await mockRandom.load();
+  });
+
+  afterAll(async () => {
+    await mockRandom.save();
+  });
 
   it("rolls some terrible stats", async () => {
-    mathRandom.mockReturnValue(0.1);
     expect(await rollStats.executeActions({})).toEqual({
       actions: [
         {
@@ -25,7 +33,6 @@ describe("rollStats", () => {
   });
 
   it("rolls some unbelievable stats", async () => {
-    mathRandom.mockReturnValue(0.9);
     expect(await rollStats.executeActions({})).toEqual({
       actions: [
         {

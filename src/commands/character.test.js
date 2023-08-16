@@ -16,6 +16,10 @@ describe("character", () => {
     await library.init();
   });
 
+  afterAll(async () => {
+    await library.close();
+  });
+
   it("tells you when you don't have any characters", async () => {
     expect(await character.execute({ userId })).toEqual(
       "No character found. Use /rollstats first!"

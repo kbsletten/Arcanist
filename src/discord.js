@@ -13,6 +13,7 @@ import { RollStats } from "./commands/rollstats.js";
 import { Light } from "./commands/light.js";
 import { Library } from "./db/library.js";
 import { Character } from "./commands/character.js";
+import * as random from "./random.js";
 
 function mapOption(schema) {
   const TYPES = {
@@ -76,7 +77,7 @@ const DiscordEvents = {
 };
 
 const library = new Library();
-const die = new Die(DiscordMarkdown);
+const die = new Die(DiscordMarkdown, random);
 const check = new Check(DiscordMarkdown, die, library);
 const roll = new Roll(DiscordMarkdown, die);
 const rollstats = new RollStats(DiscordMarkdown, die);
