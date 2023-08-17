@@ -1,9 +1,10 @@
 import { Command } from "./command.js";
 
 export class Die extends Command {
-  constructor(fmt) {
+  constructor(fmt, random) {
     super();
     this.fmt = fmt;
+    this.random = random;
   }
 
   execute({
@@ -13,15 +14,10 @@ export class Die extends Command {
     sides,
   }) {
     const rolls = multiple
-      ? [...new Array(multiple).keys()].map(
-          () => Math.floor(Math.random() * sides) + 1
-        )
+      ? [...new Array(multiple).keys()].map(() => this.random.randomInt(sides))
       : advantage ^ disadvantage
-      ? [
-          Math.floor(Math.random() * sides) + 1,
-          Math.floor(Math.random() * sides) + 1,
-        ]
-      : [Math.floor(Math.random() * sides) + 1];
+      ? [this.random.randomInt(sides), this.random.randomInt(sides)]
+      : [this.random.randomInt(sides)];
     if (multiple) {
       return {
         roll: rolls.reduce((l, r) => l + r),

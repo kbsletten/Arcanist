@@ -1,0 +1,1 @@
+{"check rolls with +0 by default":[0.64],"check handles passing and failing a check":[0.64,0.09],"check uses stats":[0.49],"check uses your active character":[0.49],"check allows a reroll of a check":[0,0.2],"check can reroll a check":[0,0.9],"check rerolls don't fail without a character":[0,0.9,0.1,0.3]}
