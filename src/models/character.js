@@ -1,4 +1,4 @@
-import { statModifier } from "../util";
+import { statModifier } from "../util.js";
 
 export class Character {
   constructor({
