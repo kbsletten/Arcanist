@@ -14,6 +14,7 @@ import { Light } from "./commands/light.js";
 import { Library } from "./db/library.js";
 import { Character } from "./commands/character.js";
 import * as random from "./random.js";
+import { Hp } from "./commands/hp.js";
 
 function mapOption(schema) {
   const TYPES = {
@@ -83,6 +84,7 @@ const roll = new Roll(DiscordMarkdown, die);
 const rollstats = new RollStats(DiscordMarkdown, die);
 const light = new Light(DiscordMarkdown, library, DiscordEvents);
 const character = new Character(DiscordMarkdown, library);
+const hp = new Hp(library);
 
 library.init().catch(console.error);
 
@@ -92,6 +94,7 @@ const commands = {
   light,
   roll,
   rollstats,
+  hp,
 };
 
 export async function startup() {
