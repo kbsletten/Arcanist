@@ -70,6 +70,12 @@ __Options__
 
 `edit` - Edit an item in your character's gear. Use `name`, `quantity` and `slots` to specify the changes you wish to make.
 
+## HP
+
+Manage your character's HP.
+
+`amount` - This option specifies how much HP to add or subtract. It will not go above your character's maximum HP or below 0.
+
 #### Light
 
 Manage the light counter.
