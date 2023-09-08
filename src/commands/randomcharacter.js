@@ -1,6 +1,6 @@
-import { Character } from "../models/character";
-import { statModifier } from "../util";
-import { Command } from "./command";
+import { Character } from "../models/character.js";
+import { statModifier } from "../util.js";
+import { Command } from "./command.js";
 
 const ANCESTRIES = [
   "Human",

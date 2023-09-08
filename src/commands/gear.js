@@ -1,5 +1,5 @@
-import { statModifier } from "../util";
-import { Command } from "./command";
+import { statModifier } from "../util.js";
+import { Command } from "./command.js";
 
 const STARTING_GEAR = [
   [{ name: "Torch" }],

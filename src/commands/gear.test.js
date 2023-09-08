@@ -1,8 +1,8 @@
-import { Die } from "./die";
-import { Character } from "./character";
-import { Gear } from "./gear";
-import { Library } from "../db/library";
-import { MockRandom } from "../mocks/random";
+import { Die } from "./die.js";
+import { Character } from "./character.js";
+import { Gear } from "./gear.js";
+import { Library } from "../db/library.js";
+import { MockRandom } from "../mocks/random.js";
 
 describe("gear", () => {
   const library = new Library(":memory:");

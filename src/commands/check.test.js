@@ -1,8 +1,8 @@
-import { Check } from "./check";
-import { Die } from "./die";
-import { Character } from "./character";
-import { Library } from "../db/library";
-import { MockRandom } from "../mocks/random";
+import { Check } from "./check.js";
+import { Die } from "./die.js";
+import { Character } from "./character.js";
+import { Library } from "../db/library.js";
+import { MockRandom } from "../mocks/random.js";
 
 describe("check", () => {
   const library = new Library(":memory:");

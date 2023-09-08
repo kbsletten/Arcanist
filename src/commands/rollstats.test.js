@@ -1,6 +1,6 @@
 import { RollStats } from "./rollstats";
-import { Die } from "./die";
-import { MockRandom } from "../mocks/random";
+import { Die } from "./die.js";
+import { MockRandom } from "../mocks/random.js";
 
 describe("rollStats", () => {
   const fmt = { bold: (t) => `*${t}*` };

@@ -1,5 +1,5 @@
-import { Library } from "../db/library";
-import { Character } from "./character";
+import { Library } from "../db/library.js";
+import { Character } from "./character.js";
 import { Hp } from "./hp.js";
 
 describe("hp", () => {

@@ -1,5 +1,5 @@
-import { Library } from "../db/library";
-import { Light } from "./light";
+import { Library } from "../db/library.js";
+import { Light } from "./light.js";
 
 describe("light", () => {
   const library = new Library(":memory:");

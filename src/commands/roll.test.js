@@ -1,6 +1,6 @@
-import { Roll } from "./roll";
-import { Die } from "./die";
-import { MockRandom } from "../mocks/random";
+import { Roll } from "./roll.js";
+import { Die } from "./die.js";
+import { MockRandom } from "../mocks/random.js";
 
 describe("roll", () => {
   const fmt = {

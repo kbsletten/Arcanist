@@ -1,5 +1,5 @@
-import { MockRandom } from "../mocks/random";
-import { Die } from "./die";
+import { MockRandom } from "../mocks/random.js";
+import { Die } from "./die.js";
 
 describe("die", () => {
   const mockRandom = new MockRandom();

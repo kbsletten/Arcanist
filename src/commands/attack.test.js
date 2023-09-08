@@ -1,8 +1,8 @@
-import { Attack } from "./attack";
-import { Die } from "./die";
-import { Character } from "./character";
-import { Library } from "../db/library";
-import { MockRandom } from "../mocks/random";
+import { Attack } from "./attack.js";
+import { Die } from "./die.js";
+import { Character } from "./character.js";
+import { Library } from "../db/library.js";
+import { MockRandom } from "../mocks/random.js";
 
 describe("attack", () => {
   const library = new Library(":memory:");
