@@ -1,5 +1,5 @@
-import { Command } from "./command";
-import { plusOrMinus, statModifier } from "../util";
+import { Command } from "./command.js";
+import { plusOrMinus, statModifier } from "../util.js";
 
 export class Attack extends Command {
   constructor(fmt, die, libarary) {
