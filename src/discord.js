@@ -30,7 +30,7 @@ function mapOption(schema) {
     description: schema.description,
     min_value: schema.minimum,
     max_value: schema.maximum,
-    name: schema.title,
+    name: schema.title.replace(/([A-Z])/g, "_$1").trim().toLowerCase(),
     // NOTE: not real JSON Schema, but that's OK
     required: schema.required,
     type: TYPES[schema.type],
@@ -143,7 +143,7 @@ export async function startup() {
     };
     for (const argument of command.arguments) {
       const value = interaction.options.get(
-        argument.title,
+        argument.title.replace(/([A-Z])/g, "_$1").trim().toLowerCase(),
         argument.required
       )?.value;
       parameters[argument.title] = value;
