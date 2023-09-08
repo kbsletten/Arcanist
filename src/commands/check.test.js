@@ -94,8 +94,8 @@ Successes: 1/2`);
     ).toEqual({
       actions: [],
       message: `username attempts a check!
-1d20 (1, ~19~) + 0 = 1
-1d20 (3, ~7~) + 0 = 3`,
+1d20 (1, ~19~) + 0 = 1; *FUMBLE!*
+1d20 (20, ~20~) + 0 = 20; *CRIT!*`,
     });
   });
 });

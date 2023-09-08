@@ -1,8 +1,6 @@
-import { Command } from "./command.js";
-
-export class Die extends Command {
+import { parse } from "../parsers/dicepool.gen.cjs";
+export class Die {
   constructor(fmt, random) {
-    super();
     this.fmt = fmt;
     this.random = random;
   }
@@ -36,5 +34,54 @@ export class Die extends Command {
         )
         .join(", "),
     };
+  }
+
+  expr({ dice, double = false }) {
+    let pool = [];
+    try {
+      pool = parse(dice);
+    } catch (e) {
+      return {
+        error: `${this.fmt.headBandage} I'm sorry, I didn't understand your request.`,
+      };
+    }
+
+    let display = "";
+    let total = 0;
+    for (const expr of pool) {
+      if (!expr.first) {
+        display += expr.neg ? " - " : " + ";
+      } else if (expr.neg) {
+        display += "-";
+      }
+      if (expr.value) {
+        display += expr.value;
+        total += (expr.neg ? -1 : 1) * expr.value;
+        continue;
+      }
+      let num = expr.num;
+      if (double) {
+        num *= 2;
+      }
+      let desc = `${num}d${expr.sides}`;
+      if (expr.dis) {
+        desc = `dis(${desc})`;
+      }
+      if (expr.adv) {
+        desc = `adv(${desc})`;
+      }
+      const results = [];
+      for (let i = 0; i < num; i++) {
+        const { roll, multiple, display } = this.execute({
+          sides: expr.sides,
+          advantage: expr.adv,
+          disadvantage: expr.dis,
+        });
+        results.push(multiple && num > 1 ? `(${display})` : display);
+        total += (expr.neg ? -1 : 1) * roll;
+      }
+      display += `${desc} (${results.join(" + ")})`;
+    }
+    return { display, total };
   }
 }

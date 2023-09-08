@@ -10,6 +10,22 @@ To add Arcanist to your discord server, [click here](https://discord.com/api/oau
 
 All commands use the Discord `/command` syntax. Additional parameters can be passed by tabbing through the different inputs.
 
+#### Attack
+
+Roll an attack and return the result.
+
+__Options__
+
+`advantage`/`disadvantage` - These options specify whether the attack should be rolled at advantage (roll two d20, take the highest) or disadvantage (roll two d20, take the lowest). If both are specified to be true, the default behavior is used (roll one d20).
+
+`ac` - This option sets the armor class to determine a hit.
+
+`modifier` - This option sets the modifier to the attack manually. This value should normally be the value between -4 and +4 that your character gets from the associated stat. Defaults to 0.
+
+`multiple` - This option specifies how many time the attack should be attempted, useful for the DM when they need to make multiple monster checks simultaneously. Defaults to 1.
+
+`stat` - This option sets the stat associated with the attack. The available options are: Strength, Dexterity, Constitution, Intelligence, Wisdom, and Charisma.
+
 #### Character
 
 View or modify your character.

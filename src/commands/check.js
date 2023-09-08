@@ -116,7 +116,12 @@ export class Check extends Command {
       });
       const total = roll + modifier;
       let result = "";
-      if (dc !== undefined) {
+      if (roll === 20) {
+        result = `; ${this.fmt.bold("CRIT!")}`;
+        successes++;
+      } else if (roll === 1) {
+        result = `; ${this.fmt.bold("FUMBLE!")}`;
+      } else if (dc !== undefined) {
         if (total >= dc) {
           result = `; ${this.fmt.bold("Success!")}`;
           successes++;
