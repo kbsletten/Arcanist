@@ -91,13 +91,13 @@ const attack = new Attack(DiscordMarkdown, die, library);
 library.init().catch(console.error);
 
 const commands = {
+  attack,
   character,
   check,
+  hp,
   light,
   roll,
   rollstats,
-  hp,
-  attack,
 };
 
 export async function startup() {

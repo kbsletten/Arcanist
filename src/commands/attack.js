@@ -11,6 +11,11 @@ export class Attack extends Command {
 
   arguments = [
     {
+      description: "The name of the attack you want to add",
+      title: "add",
+      type: "string",
+    },
+    {
       description: "The modifier to add to the attack roll",
       title: "modifier",
       type: "integer",
@@ -64,31 +69,84 @@ export class Attack extends Command {
       title: "multiple",
       type: "integer",
     },
+    {
+      description: "The name of the saved attack to use",
+      title: "name",
+      type: "string",
+    },
   ];
 
   description = "Roll an attack and return the result.";
 
   async executeActions({
+    add,
     ac,
     advantage,
     attackBonus,
     bonus,
     damage,
     disadvantage,
-    modifier = 0,
+    modifier,
     multiple = 1,
+    name,
     username,
     stat,
     userId,
   }) {
     const user = await this.library.getUser(userId);
-    let [, character] = await this.library.getDefaultCharacter(userId, user);
+    let [characterId, character] = await this.library.getDefaultCharacter(
+      userId,
+      user
+    );
+    if ((add || name) && !character) {
+      return {
+        actions: [],
+        message: `You don't have a character yet. Create one with \`/character\``,
+      };
+    }
+    if (add !== undefined) {
+      character.attacks.push({
+        name: add,
+        attackBonus,
+        bonus,
+        damage,
+        modifier,
+        stat,
+      });
+      await this.library.updateCharacter(characterId, character);
+      return { actions: [], message: `Added attack ${add}` };
+    }
+    let attackName = "attacks";
+    if (name !== undefined) {
+      const attack = character.attacks.find((it) =>
+        it.name.toLowerCase().includes(name.toLowerCase())
+      );
+      if (!attack) {
+        return { actions: [], message: `No attack found with name ${name}` };
+      }
+      if (attackBonus === undefined && attack.attackBonus !== undefined) {
+        attackBonus = attack.attackBonus;
+      }
+      if (bonus === undefined && attack.bonus !== undefined) {
+        bonus = attack.bonus;
+      }
+      if (damage === undefined && attack.damage !== undefined) {
+        damage = attack.damage;
+      }
+      if (modifier === undefined && attack.modifier !== undefined) {
+        modifier = attack.modifier;
+      }
+      if (stat === undefined && attack.stat !== undefined) {
+        stat = attack.stat;
+      }
+      attackName = `attacks with a ${attack.name}`;
+    }
     const lines = [];
     if (ac !== undefined) {
       lines.push(`${this.fmt.bold("AC")}: ${ac}`);
     }
     if (stat !== undefined) {
-      if (character && !modifier) {
+      if (character && modifier === undefined) {
         modifier = statModifier(character[stat.toLowerCase()]);
       }
     }
@@ -100,7 +158,7 @@ export class Attack extends Command {
         advantage,
         disadvantage,
       });
-      const total = roll + modifier + (attackBonus ?? 0) + (bonus ?? 0);
+      const total = roll + (modifier ?? 0) + (attackBonus ?? 0) + (bonus ?? 0);
       let result = "";
       let hit = false;
       let crit = false;
@@ -120,7 +178,7 @@ export class Attack extends Command {
       } else {
         hit = true;
       }
-      const modifiers = [plusOrMinus(modifier)];
+      const modifiers = [plusOrMinus(modifier ?? 0)];
       if (attackBonus !== undefined) {
         modifiers.push(plusOrMinus(attackBonus));
       }
@@ -147,7 +205,7 @@ export class Attack extends Command {
         totalDamage += damageRoll;
       }
     }
-    const message = `${character?.name ?? username} attacks!
+    const message = `${character?.name ?? username} ${attackName}!
 ${lines.join("\n")}`;
     return { actions: [], message };
   }

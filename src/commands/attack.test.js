@@ -99,4 +99,51 @@ Damage: 1d4 (1) + 1 = 2`);
     ).toEqual(`Unnamed character attacks!
 To Hit: 1d20 (14) + 3 - 2 = 15`);
   });
+
+  it("checks for missing character", async () => {
+    expect(await attack.execute({ add: "Test Attack" })).toEqual(
+      "You don't have a character yet. Create one with `/character`"
+    );
+  });
+
+  it("checks for a missing attack", async () => {
+    expect(await attack.execute({ name: "Test Attack", userId })).toEqual(
+      "No attack found with name Test Attack"
+    );
+  });
+
+  it("allows saving and reusing attacks", async () => {
+    expect(
+      await attack.execute({
+        add: "Test Attack",
+        attackBonus: 2,
+        bonus: 1,
+        damage: "1d4",
+        modifier: 3,
+        stat: "Strength",
+        userId,
+      })
+    ).toEqual(`Added attack Test Attack`);
+    expect(
+      await attack.execute({
+        name: "Test Attack",
+        userId,
+      })
+    ).toEqual(`Unnamed character attacks with a Test Attack!
+To Hit: 1d20 (18) + 3 + 2 + 1 = 24
+Damage: 1d4 (3) + 1 = 4`);
+    expect(
+      await attack.execute({
+        name: "Test Attack",
+        attackBonus: 3,
+        bonus: 0,
+        damage: "1d8",
+        modifier: -1,
+        stat: "Dexterity",
+        userId,
+      })
+    ).toEqual(`Unnamed character attacks with a Test Attack!
+To Hit: 1d20 (18) - 1 + 3 + 0 = 20
+Damage: 1d8 (4) + 0 = 4`);
+  });
 });

@@ -5,6 +5,7 @@ export class Character {
     ac = undefined,
     alignment = "N",
     ancestry = "Mysterious",
+    attacks = [],
     background = "Stranger",
     charisma = 10,
     class: className = "Classless",
@@ -16,8 +17,8 @@ export class Character {
     intelligence = 10,
     level = 0,
     luck = false,
-    name = "Unnamed character",
     maxHp = undefined,
+    name = "Unnamed character",
     strength = 10,
     title = "Unknown",
     wisdom = 10,
@@ -27,6 +28,25 @@ export class Character {
     this.ac = ac ?? 10 + statModifier(dexterity);
     this.alignment = alignment;
     this.ancestry = ancestry;
+    this.attacks = attacks.map((attack) => {
+      const {
+        name = "Unknown Attack",
+        attackBonus = undefined,
+        bonus = undefined,
+        damage = undefined,
+        modifier = undefined,
+        stat = undefined,
+      } = attack;
+      return {
+        ...attack,
+        name,
+        attackBonus,
+        bonus,
+        damage,
+        modifier,
+        stat,
+      };
+    });
     this.background = background;
     this.charisma = charisma;
     this.class = className;

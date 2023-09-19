@@ -16,6 +16,8 @@ Roll an attack and return the result.
 
 __Options__
 
+`add` - Add an attack to your character for later reference. Use `attackBonus`, `bonus`, `damage`, `modifier`, and `stat` to save details.
+
 `advantage`/`disadvantage` - These options specify whether the attack should be rolled at advantage (roll two d20, take the highest) or disadvantage (roll two d20, take the lowest). If both are specified to be true, the default behavior is used (roll one d20).
 
 `ac` - This option sets the armor class to determine a hit.
@@ -23,6 +25,8 @@ __Options__
 `modifier` - This option sets the modifier to the attack manually. This value should normally be the value between -4 and +4 that your character gets from the associated stat. Defaults to 0.
 
 `multiple` - This option specifies how many time the attack should be attempted, useful for the DM when they need to make multiple monster checks simultaneously. Defaults to 1.
+
+`name` - Use a saved attack by name. Options specified directly take precedence over the saved values.
 
 `stat` - This option sets the stat associated with the attack. The available options are: Strength, Dexterity, Constitution, Intelligence, Wisdom, and Charisma.
 
