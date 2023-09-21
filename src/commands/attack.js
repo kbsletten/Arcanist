@@ -1,5 +1,5 @@
 import { Command } from "./command.js";
-import { plusOrMinus, statModifier } from "../util.js";
+import { plusOrMinus, statModifier, findByName } from "../util.js";
 
 export class Attack extends Command {
   constructor(fmt, die, libarary) {
@@ -13,6 +13,16 @@ export class Attack extends Command {
     {
       description: "The name of the attack you want to add",
       title: "add",
+      type: "string",
+    },
+    {
+      description: "The name of the saved attack to edit",
+      title: "edit",
+      type: "string",
+    },
+    {
+      description: "The name of the saved attack to remove",
+      title: "remove",
       type: "string",
     },
     {
@@ -74,6 +84,11 @@ export class Attack extends Command {
       title: "name",
       type: "string",
     },
+    {
+      description: "List your saved attacks",
+      title: "list",
+      type: "boolean",
+    },
   ];
 
   description = "Roll an attack and return the result.";
@@ -81,6 +96,24 @@ export class Attack extends Command {
   async add({ id: attack, userId }) {
     const [name, damage, stat] = attack.split(":");
     return await this.executeActions({ add: name, damage, stat, userId });
+  }
+
+  listAttacks(character, lines = []) {
+    if (character.attacks.length === 0) {
+      lines.push("No attacks saved");
+    } else {
+      for (const attack of character.attacks) {
+        lines.push(
+          `${attack.name}: ${attack.damage} (${attack.stat ?? "none"})`
+        );
+      }
+    }
+    return {
+      actions: [],
+      message: [this.fmt.bold(`${character.name}'s attacks:`), ...lines].join(
+        "\n"
+      ),
+    };
   }
 
   async executeActions({
@@ -91,10 +124,13 @@ export class Attack extends Command {
     bonus,
     damage,
     disadvantage,
+    edit,
+    list = false,
     modifier,
     multiple = 1,
     name,
     username,
+    remove,
     stat,
     userId,
   }) {
@@ -103,13 +139,14 @@ export class Attack extends Command {
       userId,
       user
     );
-    if ((add || name) && !character) {
+    const lines = [];
+    if ((add || name || edit || remove || list) && !character) {
       return {
         actions: [],
         message: `You don't have a character yet. Create one with \`/character\``,
       };
     }
-    if (add !== undefined) {
+    if (add) {
       character.attacks.push({
         name: add,
         attackBonus,
@@ -120,6 +157,53 @@ export class Attack extends Command {
       });
       await this.library.updateCharacter(characterId, character);
       return { actions: [], message: `Added attack ${add}` };
+    }
+    if (edit) {
+      const attacks = findByName(edit, character.attacks);
+      if (attacks.length === 0) {
+        return {
+          actions: [],
+          message: `Unable to find attack to edit: ${edit}`,
+        };
+      } else if (attacks.length > 1) {
+        return {
+          actions: [],
+          message: `Found multiple attacks to edit: ${edit} (found ${attacks
+            .map((it) => it.name)
+            .join(" and ")})`,
+        };
+      }
+      attacks[0].name = name ?? attacks[0].name;
+      attacks[0].attackBonus = attackBonus ?? attacks[0].attackBonus;
+      attacks[0].bonus = bonus ?? attacks[0].bonus;
+      attacks[0].damage = damage ?? attacks[0].damage;
+      attacks[0].modifier = modifier ?? attacks[0].modifier;
+      lines.push(`Edited ${attacks[0].name}`);
+      await this.library.updateCharacter(characterId, character);
+      return this.listAttacks(character, lines);
+    }
+    if (remove) {
+      const attacks = findByName(remove, character.attacks);
+      if (attacks.length === 0) {
+        return {
+          actions: [],
+          message: `Unable to find attack to remove: ${remove}`,
+        };
+      } else if (attacks.length > 1) {
+        return {
+          actions: [],
+          message: `Found multiple attacks to remove: ${remove} (found ${attacks
+            .map((it) => it.name)
+            .join(" and ")})`,
+        };
+      }
+      character.attacks = character.attacks.filter((it) => it !== attacks[0]);
+      lines.push(`Removed ${attacks[0].name}`);
+      await this.library.updateCharacter(characterId, character);
+      return this.listAttacks(character, lines);
+    }
+    if (list) {
+      return this.listAttacks(character);
     }
     let attackName = "attacks";
     if (name !== undefined) {
@@ -146,7 +230,6 @@ export class Attack extends Command {
       }
       attackName = `attacks with a ${attack.name}`;
     }
-    const lines = [];
     if (ac !== undefined) {
       lines.push(`${this.fmt.bold("AC")}: ${ac}`);
     }

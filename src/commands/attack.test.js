@@ -112,6 +112,12 @@ To Hit: 1d20 (14) + 3 - 2 = 15`);
     );
   });
 
+  it(`allows you to list your attacks`, async () => {
+    expect(await attack.execute({ list: true, userId }))
+      .toEqual(`*Unnamed character's attacks:*
+No attacks saved`);
+  });
+
   it("allows saving and reusing attacks", async () => {
     expect(
       await attack.execute({
@@ -145,5 +151,73 @@ Damage: 1d4 (3) + 1 = 4`);
     ).toEqual(`Unnamed character attacks with a Test Attack!
 To Hit: 1d20 (18) - 1 + 3 + 0 = 20
 Damage: 1d8 (4) + 0 = 4`);
+  });
+
+  it(`warns you when you try to edit a nonexistent attack`, async () => {
+    expect(
+      await attack.execute({ edit: "Kamehameha", damage: "2d20", userId })
+    ).toEqual(`Unable to find attack to edit: Kamehameha`);
+  });
+
+  it(`warns you when you try to remove a nonexistent attack`, async () => {
+    expect(await attack.execute({ remove: "Kamehameha", userId })).toEqual(
+      `Unable to find attack to remove: Kamehameha`
+    );
+  });
+
+  it(`warns you when you try to edit an ambiguous attack`, async () => {
+    await attack.execute({ add: "Shortsword", damage: "1d6", userId });
+    await attack.execute({ add: "Longsword", damage: "1d8", userId });
+    expect(await attack.execute({ edit: "Sword", bonus: 2, userId })).toEqual(
+      `Found multiple attacks to edit: Sword (found Shortsword and Longsword)`
+    );
+  });
+
+  it(`warns you when you try to remove an ambiguous attack`, async () => {
+    expect(await attack.execute({ remove: "Sword", userId })).toEqual(
+      `Found multiple attacks to remove: Sword (found Shortsword and Longsword)`
+    );
+  });
+
+  it(`allows you to edit the name of an attack`, async () => {
+    expect(
+      await attack.execute({
+        edit: "Test Attack",
+        attackBonus: 3,
+        bonus: 0,
+        damage: "1d8",
+        modifier: -1,
+        stat: "Dexterity",
+        userId,
+      })
+    ).toEqual(`*Unnamed character's attacks:*
+Edited Test Attack
+Test Attack: 1d8 (Strength)
+Shortsword: 1d6 (none)
+Longsword: 1d8 (none)`);
+
+    expect(
+      await attack.execute({
+        edit: "Test Attack",
+        name: "Kamehameha",
+        userId,
+      })
+    ).toEqual(`*Unnamed character's attacks:*
+Edited Kamehameha
+Kamehameha: 1d8 (Strength)
+Shortsword: 1d6 (none)
+Longsword: 1d8 (none)`);
+  });
+
+  it(`allows you to delete an attack`, async () => {
+    expect(
+      await attack.execute({
+        remove: "Kamehameha",
+        userId,
+      })
+    ).toEqual(`*Unnamed character's attacks:*
+Removed Kamehameha
+Shortsword: 1d6 (none)
+Longsword: 1d8 (none)`);
   });
 });

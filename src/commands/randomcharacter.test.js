@@ -64,7 +64,7 @@ Adding gear:
   });
 
   it("rolls a new 1st-level character", async () => {
-    expect(await randomCharacter.executeActions({ level: 1, userId })).toEqual({
+    expect(await randomCharacter.executeActions({ userId })).toEqual({
       actions: [],
       message: `Level: 1
 Ancestry: 1d12 (2) = Human
@@ -81,13 +81,13 @@ Wisdom: 3d6 (1 + 4 + 1) = 6
 Charisma: 3d6 (2 + 3 + 1) = 6
 Hit Points: 1d6 (6) + -4 = 2
 Adding crawling kit:
- - Flint and steel
- - Torch
- - Torch
- - Rations x3
- - Iron spikes x10
- - Grappling hook
- - Rope, 60'`,
+- Flint and steel
+- Torch
+- Torch
+- Rations x3
+- Iron spikes x10
+- Grappling hook
+- Rope, 60'`,
     });
     expect(await character.executeActions({ userId })).toEqual({
       actions: [],

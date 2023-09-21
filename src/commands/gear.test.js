@@ -62,12 +62,12 @@ Slots: 0/10`,
         },
       ],
       message: `*Unnamed character's gear*
- - Torch
- - Shortbow
- - Arrows x5
- - Rope, 60'
- - Iron spikes x10
- - Pole
+- Torch
+- Shortbow
+- Arrows x5
+- Rope, 60'
+- Iron spikes x10
+- Pole
 Slots: 6/10`,
     });
   });
@@ -83,13 +83,13 @@ Slots: 6/10`,
         },
       ],
       message: `*Unnamed character's gear*
- - Torch
- - Shortbow
- - Arrows x5
- - Rope, 60'
- - Iron spikes x10
- - Pole
- - Longer Pole (2)
+- Torch
+- Shortbow
+- Arrows x5
+- Rope, 60'
+- Iron spikes x10
+- Pole
+- Longer Pole (2)
 Slots: 8/10`,
     });
   });
@@ -100,9 +100,21 @@ Slots: 8/10`,
     );
   });
 
-  it(`warns you when you try to an ambiguous item`, async () => {
-    expect(await gear.execute({ edit: "Pole", slots: 2, userId })).toEqual(
-      `Found multiple items to edit: Pole (found Pole and Longer Pole)`
+  it(`warns you when you try to remove a nonexistent item`, async () => {
+    expect(await gear.execute({ remove: "Vorpal", userId })).toEqual(
+      `Unable to find gear to remove: Vorpal`
+    );
+  });
+
+  it(`warns you when you try to edit an ambiguous item`, async () => {
+    expect(await gear.execute({ edit: "Pol", slots: 2, userId })).toEqual(
+      `Found multiple items to edit: Pol (found Pole and Longer Pole)`
+    );
+  });
+
+  it(`warns you when you try to remove an ambiguous item`, async () => {
+    expect(await gear.execute({ remove: "Pol", userId })).toEqual(
+      `Found multiple items to remove: Pol (found Pole and Longer Pole)`
     );
   });
 
@@ -111,13 +123,14 @@ Slots: 8/10`,
       await gear.execute({ edit: "Arrows", quantity: 10, userId })
     ).toEqual(
       `*Unnamed character's gear*
- - Torch
- - Shortbow
- - Arrows x10
- - Rope, 60'
- - Iron spikes x10
- - Pole
- - Longer Pole (2)
+Edited Arrows
+- Torch
+- Shortbow
+- Arrows x10
+- Rope, 60'
+- Iron spikes x10
+- Pole
+- Longer Pole (2)
 Slots: 8/10`
     );
   });
@@ -127,13 +140,14 @@ Slots: 8/10`
       await gear.execute({ edit: "Longer Pole", slots: 1, userId })
     ).toEqual(
       `*Unnamed character's gear*
- - Torch
- - Shortbow
- - Arrows x10
- - Rope, 60'
- - Iron spikes x10
- - Pole
- - Longer Pole
+Edited Longer Pole
+- Torch
+- Shortbow
+- Arrows x10
+- Rope, 60'
+- Iron spikes x10
+- Pole
+- Longer Pole
 Slots: 7/10`
     );
   });
@@ -143,14 +157,29 @@ Slots: 7/10`
       await gear.execute({ edit: "Longer Pole", name: "Fishing pole", userId })
     ).toEqual(
       `*Unnamed character's gear*
- - Torch
- - Shortbow
- - Arrows x10
- - Rope, 60'
- - Iron spikes x10
- - Pole
- - Fishing pole
+Edited Fishing pole
+- Torch
+- Shortbow
+- Arrows x10
+- Rope, 60'
+- Iron spikes x10
+- Pole
+- Fishing pole
 Slots: 7/10`
+    );
+  });
+
+  it(`allows you to remove an item`, async () => {
+    expect(await gear.execute({ remove: "Torch", userId })).toEqual(
+      `*Unnamed character's gear*
+Removed Torch
+- Shortbow
+- Arrows x10
+- Rope, 60'
+- Iron spikes x10
+- Pole
+- Fishing pole
+Slots: 6/10`
     );
   });
 
@@ -169,13 +198,13 @@ Slots: 0/10`,
     expect(await gear.crawling({ userId })).toEqual({
       actions: [],
       message: `*Adding crawling kit*
- - Flint and steel
- - Torch
- - Torch
- - Rations x3
- - Iron spikes x10
- - Grappling hook
- - Rope, 60'`,
+- Flint and steel
+- Torch
+- Torch
+- Rations x3
+- Iron spikes x10
+- Grappling hook
+- Rope, 60'`,
     });
   });
 
@@ -213,10 +242,10 @@ Slots: 0/10`,
         },
       ],
       message: `*Unnamed character's gear*
- - Leather armor
- - Chainmail
- - Plate mail
- - Shield
+- Leather armor
+- Chainmail
+- Plate mail
+- Shield
 Slots: 4/10`,
     });
   });
@@ -246,10 +275,10 @@ Slots: 4/10`,
         },
       ],
       message: `*Unnamed character's gear*
- - Leather armor
- - Chainmail
- - Plate mail
- - Shield
+- Leather armor
+- Chainmail
+- Plate mail
+- Shield
 Slots: 4/10`,
     });
   });
@@ -283,9 +312,9 @@ Slots: 4/10`,
         },
       ],
       message: `*Unnamed character's gear*
- - Shortsword
- - Bastard sword
- - Dagger
+- Shortsword
+- Bastard sword
+- Dagger
 Slots: 3/10`,
     });
     expect(
@@ -314,9 +343,9 @@ Slots: 3/10`,
         },
       ],
       message: `*Unnamed character's gear*
- - Shortsword
- - Bastard sword
- - Dagger
+- Shortsword
+- Bastard sword
+- Dagger
 Slots: 3/10`,
     });
   });

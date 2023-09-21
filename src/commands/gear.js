@@ -1,4 +1,4 @@
-import { statModifier } from "../util.js";
+import { findByName, statModifier } from "../util.js";
 import { Command } from "./command.js";
 
 const STARTING_GEAR = [
@@ -70,6 +70,11 @@ export class Gear extends Command {
     {
       description: "The gear you want to edit",
       title: "edit",
+      type: "string",
+    },
+    {
+      description: "The gear you want to remove",
+      title: "remove",
       type: "string",
     },
     {
@@ -160,7 +165,7 @@ export class Gear extends Command {
     for (const item of character.gear) {
       const quantity = item.quantity > 1 ? ` x${item.quantity}` : "";
       const slots = item.slots > 1 ? ` (${item.slots})` : "";
-      lines.push(` - ${item.name}${quantity}${slots}`);
+      lines.push(`- ${item.name}${quantity}${slots}`);
       if (armors[item.name]) {
         if (character.ac !== armors[item.name]) {
           actions.push({
@@ -186,7 +191,7 @@ export class Gear extends Command {
     }
   }
 
-  async executeActions({ add, edit, name, quantity, slots, userId }) {
+  async executeActions({ add, edit, remove, name, quantity, slots, userId }) {
     const user = await this.library.getUser(userId);
     let [characterId, character] = await this.library.getDefaultCharacter(
       userId,
@@ -207,7 +212,7 @@ export class Gear extends Command {
       });
     }
     if (edit) {
-      const items = character.gear.filter((it) => it.name.includes(edit));
+      const items = findByName(edit, character.gear);
       if (items.length === 0) {
         return { actions: [], message: `Unable to find gear to edit: ${edit}` };
       } else if (items.length > 1) {
@@ -221,6 +226,25 @@ export class Gear extends Command {
       items[0].name = name ?? items[0].name;
       items[0].quantity = quantity ?? items[0].quantity;
       items[0].slots = slots ?? items[0].slots;
+      lines.push(`Edited ${items[0].name}`);
+    }
+    if (remove) {
+      const items = findByName(remove, character.gear);
+      if (items.length === 0) {
+        return {
+          actions: [],
+          message: `Unable to find gear to remove: ${remove}`,
+        };
+      } else if (items.length > 1) {
+        return {
+          actions: [],
+          message: `Found multiple items to remove: ${remove} (found ${items
+            .map((it) => it.name)
+            .join(" and ")})`,
+        };
+      }
+      character.gear = character.gear.filter((it) => it !== items[0]);
+      lines.push(`Removed ${items[0].name}`);
     }
     const used = character.gear.reduce((u, item) => u + item.slots, 0);
     const load = Math.max(10, character.strength);

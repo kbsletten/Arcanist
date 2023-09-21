@@ -22,11 +22,17 @@ __Options__
 
 `ac` - This option sets the armor class to determine a hit.
 
+`edit` - Edit a saved attack with the matching name. Use `attackBonus`, `bonus`, `damage`, `modifier`, `name`, and `stat` to update details.
+
+`list` - List the available attacks instead of attacking when set to True.
+
 `modifier` - This option sets the modifier to the attack manually. This value should normally be the value between -4 and +4 that your character gets from the associated stat. Defaults to 0.
 
 `multiple` - This option specifies how many time the attack should be attempted, useful for the DM when they need to make multiple monster checks simultaneously. Defaults to 1.
 
 `name` - Use a saved attack by name. Options specified directly take precedence over the saved values.
+
+`remove` - Remove a saved attack with the matching name.
 
 `stat` - This option sets the stat associated with the attack. The available options are: Strength, Dexterity, Constitution, Intelligence, Wisdom, and Charisma.
 
@@ -89,6 +95,8 @@ __Options__
 `add` - Add an item to your character's gear. Use `quantity` and `slots` to specify the quantity or number of slots for the item.
 
 `edit` - Edit an item in your character's gear. Use `name`, `quantity` and `slots` to specify the changes you wish to make.
+
+`remove` - Remove an item in your character's gear.
 
 ## HP
 
