@@ -1,6 +1,7 @@
 import { Die } from "./die.js";
 import { Character } from "./character.js";
 import { Gear } from "./gear.js";
+import { Attack } from "./attack.js";
 import { Library } from "../db/library.js";
 import { MockRandom } from "../mocks/random.js";
 
@@ -11,6 +12,7 @@ describe("gear", () => {
   const mockRandom = new MockRandom();
   const die = new Die(fmt, mockRandom);
   const gear = new Gear(fmt, library, die);
+  const attack = new Attack(fmt, die, library);
   let userId = Math.random().toString().substring(2);
 
   beforeAll(async () => {
@@ -53,7 +55,12 @@ Slots: 0/10`,
 
   it(`allows adding gear by name`, async () => {
     expect(await gear.executeActions({ add: "Pole", userId })).toEqual({
-      actions: [],
+      actions: [
+        {
+          id: "attack-add-Shortbow:1d4:Dexterity",
+          title: "Equip Shortbow",
+        },
+      ],
       message: `*Unnamed character's gear*
  - Torch
  - Shortbow
@@ -69,7 +76,12 @@ Slots: 6/10`,
     expect(
       await gear.executeActions({ add: "Longer Pole", slots: 2, userId })
     ).toEqual({
-      actions: [],
+      actions: [
+        {
+          id: "attack-add-Shortbow:1d4:Dexterity",
+          title: "Equip Shortbow",
+        },
+      ],
       message: `*Unnamed character's gear*
  - Torch
  - Shortbow
@@ -239,6 +251,73 @@ Slots: 4/10`,
  - Plate mail
  - Shield
 Slots: 4/10`,
+    });
+  });
+
+  it(`prompts equipping weapons`, async () => {
+    await character.fromStats({ id: "8:10:12:13:14:15", userId });
+    await gear.execute({ add: "Shortsword", userId });
+    await gear.execute({ add: "Bastard sword", userId });
+    await gear.execute({ add: "Dagger", userId });
+    expect(await gear.executeActions({ userId })).toEqual({
+      actions: [
+        {
+          id: "attack-add-Shortsword:1d6:Strength",
+          title: "Equip Shortsword",
+        },
+        {
+          id: "attack-add-Bastard sword (1H):1d8:Strength",
+          title: "Equip Bastard sword (1H)",
+        },
+        {
+          id: "attack-add-Bastard sword (2H):1d10:Strength",
+          title: "Equip Bastard sword (2H)",
+        },
+        {
+          id: "attack-add-Dagger (Strength):1d4:Strength",
+          title: "Equip Dagger (Strength)",
+        },
+        {
+          id: "attack-add-Dagger (Dexterity):1d4:Dexterity",
+          title: "Equip Dagger (Dexterity)",
+        },
+      ],
+      message: `*Unnamed character's gear*
+ - Shortsword
+ - Bastard sword
+ - Dagger
+Slots: 3/10`,
+    });
+    expect(
+      await attack.add({ id: "Bastard sword (2H):1d10:Strength", userId })
+    ).toEqual({
+      actions: [],
+      message: `Added attack Bastard sword (2H)`,
+    });
+    expect(await gear.executeActions({ userId })).toEqual({
+      actions: [
+        {
+          id: "attack-add-Shortsword:1d6:Strength",
+          title: "Equip Shortsword",
+        },
+        {
+          id: "attack-add-Bastard sword (1H):1d8:Strength",
+          title: "Equip Bastard sword (1H)",
+        },
+        {
+          id: "attack-add-Dagger (Strength):1d4:Strength",
+          title: "Equip Dagger (Strength)",
+        },
+        {
+          id: "attack-add-Dagger (Dexterity):1d4:Dexterity",
+          title: "Equip Dagger (Dexterity)",
+        },
+      ],
+      message: `*Unnamed character's gear*
+ - Shortsword
+ - Bastard sword
+ - Dagger
+Slots: 3/10`,
     });
   });
 });

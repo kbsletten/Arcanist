@@ -26,6 +26,33 @@ const CRAWLING_KIT = [
   { name: "Rope, 60'" },
 ];
 
+const WEAPONS = {
+  "Bastard sword": [
+    { name: "Bastard sword (1H)", damage: "1d8", stat: "Strength" },
+    { name: "Bastard sword (2H)", damage: "1d10", stat: "Strength" },
+  ],
+  Club: [{ name: "Club", damage: "1d4", stat: "Strength" }],
+  Crossbow: [{ name: "Crossbow", damage: "1d6", stat: "Dexterity" }],
+  Dagger: [
+    { name: "Dagger (Strength)", damage: "1d4", stat: "Strength" },
+    { name: "Dagger (Dexterity)", damage: "1d4", stat: "Dexterity" },
+  ],
+  Greataxe: [
+    { name: "Greataxe (1H)", damage: "1d8", stat: "Strength" },
+    { name: "Greataxe (2H)", damage: "1d10", stat: "Strength" },
+  ],
+  Greatsword: [{ name: "Greatsword", damage: "1d12", stat: "Strength" }],
+  Javelin: [{ name: "Javelin", damage: "1d4", stat: "Strength" }],
+  Longbow: [{ name: "Longbow", damage: "1d8", stat: "Dexterity" }],
+  Longsword: [{ name: "Longsword", damage: "1d8", stat: "Strength" }],
+  Mace: [{ name: "Mace", damage: "1d6", stat: "Strength" }],
+  Shortbow: [{ name: "Shortbow", damage: "1d4", stat: "Dexterity" }],
+  Shortsword: [{ name: "Shortsword", damage: "1d6", stat: "Strength" }],
+  Spear: [{ name: "Spear", damage: "1d6", stat: "Strength" }],
+  Staff: [{ name: "Staff", damage: "1d4", stat: "Strength" }],
+  Warhammer: [{ name: "Warhammer", damage: "1d10", stat: "Strength" }],
+};
+
 export class Gear extends Command {
   constructor(fmt, library, die) {
     super();
@@ -81,7 +108,9 @@ export class Gear extends Command {
         character.gear.push({ name, slots, quantity });
       }
       lines.push(
-        `1d${STARTING_GEAR.length} (${itemDisplay}) = ${index}; ${STARTING_GEAR[index - 1]
+        `1d${STARTING_GEAR.length} (${itemDisplay}) = ${index}; ${STARTING_GEAR[
+          index - 1
+        ]
           .map((it) => it.name)
           .join(" and ")}`
       );
@@ -143,6 +172,14 @@ export class Gear extends Command {
           actions.push({
             id: `character-update-ac:${armors[item.name] + 2}`,
             title: `Equip ${item.name} + Shield`,
+          });
+        }
+      }
+      for (const attack of WEAPONS[item.name] ?? []) {
+        if (!character.attacks.some((it) => it.name === attack.name)) {
+          actions.push({
+            id: `attack-add-${attack.name}:${attack.damage}:${attack.stat}`,
+            title: `Equip ${attack.name}`,
           });
         }
       }

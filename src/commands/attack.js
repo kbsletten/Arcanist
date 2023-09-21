@@ -78,6 +78,11 @@ export class Attack extends Command {
 
   description = "Roll an attack and return the result.";
 
+  async add({ id: attack, userId }) {
+    const [name, damage, stat] = attack.split(":");
+    return await this.executeActions({ add: name, damage, stat, userId });
+  }
+
   async executeActions({
     add,
     ac,
